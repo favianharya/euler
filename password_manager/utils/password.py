@@ -10,6 +10,8 @@ from utils.view import ScreenUtils
 
 from rich.console import Console
 from rich.panel import Panel
+from rich.text import Text
+from rich.prompt import Prompt
 
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings
@@ -18,6 +20,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.application import get_app_or_none
 
 import questionary
+from zxcvbn import zxcvbn
 
 console = Console()
 
@@ -168,12 +171,21 @@ class PasswordAdder:
             cancel_flag["cancelled"] = True
             event.app.exit("")
 
-        result = prompt(
-            "Enter a name for this password (press [Esc] to cancel): ",
-            key_bindings=bindings,
-        )
+        while True:
+            result = prompt(
+                "Enter a name for this password (press [Esc] to cancel): ",
+                key_bindings=bindings,
+            )
 
-        return None if cancel_flag["cancelled"] else result
+            if cancel_flag["cancelled"]:
+                return None
+            
+            if not result.strip():
+                print("❌ Name input cancelled or empty.")
+                continue
+            
+
+            return result.strip()
 
     def add(self):
         ScreenUtils.clear()
@@ -318,3 +330,76 @@ class PasswordViewer:
                         PasswordViewer.show_deletion_message(selected)
                         input("Press [Enter] to continue...")
                         break  # Go back to search view with updated list
+
+class PasswordPowerChecker:
+    def __init__(self):
+        self.console = Console()
+        self.strength_levels = {
+            0: ("💀 Very Weak", "bold red"),
+            1: ("⚠️ Weak", "red"),
+            2: ("🟡 Fair", "yellow"),
+            3: ("🟢 Strong", "green"),
+            4: ("✅ Very Strong", "bold green")
+        }
+        self.escape_pressed = False
+
+    def check(self, password: str):
+        result = zxcvbn(password)
+        score = result['score']
+        feedback = result['feedback']
+        level_text, color = self.strength_levels.get(score, ("Unknown", "white"))
+
+        # Prepare output
+        password_info = Text()
+        password_info.append(f"Password: ", style="bold cyan")
+        password_info.append(f"{password}\n")
+        password_info.append(f"Strength: ", style="bold cyan")
+        password_info.append(f"{level_text}\n", style=color)
+
+        if feedback['warning']:
+            password_info.append("\n⚠️ Warning:\n", style="bold red")
+            password_info.append(f"  {feedback['warning']}\n")
+
+        if feedback['suggestions']:
+            password_info.append("\n💡 Suggestions:\n", style="bold yellow")
+            for suggestion in feedback['suggestions']:
+                password_info.append(f"  - {suggestion}\n")
+
+        self.console.print(Panel(password_info, title="🔐 Password Power Checker", border_style=color))
+
+    def get_password_input(self):
+        bindings = KeyBindings()
+
+        @bindings.add('escape')
+        def _(event):
+            self.escape_pressed = True
+            event.app.exit()
+
+        while True:
+            self.escape_pressed = False
+            password = prompt("Enter your password: ", key_bindings=bindings)
+
+            if self.escape_pressed:
+                return None
+
+            if password is None or password.strip() == "":
+                print("❌ Password input cancelled or empty.")
+                continue  # retry
+
+            return password 
+
+
+    def run(self):
+        while True:
+            ScreenUtils.clear()
+            self.console.print("[cyan]🔍 Analyze your password strength with instant feedback[/cyan]\n")
+            password = self.get_password_input()
+            if password is None:
+                return  # User pressed Esc
+
+            self.check(password)
+
+            # Ask to check another password
+            again = questionary.confirm("🔁 Do you want to check another password?").ask()
+            if not again:
+                break

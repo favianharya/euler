@@ -3,7 +3,7 @@ from rich.panel import Panel
 from rich.text import Text
 
 from utils.file import read_text  
-from utils.password import PasswordEnhancer, PasswordAdder, PasswordViewer
+from utils.password import PasswordEnhancer, PasswordAdder, PasswordViewer, PasswordPowerChecker
 from utils.view import ScreenUtils
 
 import questionary
@@ -22,6 +22,8 @@ def description():
     console.print("[green]🔐[/green] Store all your passwords securely")
     console.print("[green]🔧[/green] Generate strong, unique passwords instantly")
     console.print("[green]➕[/green] Add new credentials with ease\n")
+    console.print("[cyan]🔍[/cyan] Analyze your password strength with instant feedback\n")
+
 
 def menu():
     # Print the menu panel
@@ -36,6 +38,7 @@ def menu():
         choices=[
             "🔓 View saved passwords",
             "➕ Add a new password",
+            "🔍 Check your password",
             "🔧 Generate a password",
             "❌ Exit"
         ]
@@ -59,6 +62,11 @@ def main():
         elif choice == "➕ Add a new password":
             adder = PasswordAdder()
             adder.add()
+            input("\nPress [Enter] to return to the menu...") 
+        
+        elif choice == "🔍 Check your password":
+            checker = PasswordPowerChecker()
+            checker.run()
             input("\nPress [Enter] to return to the menu...") 
 
         elif choice == "🔧 Generate a password":

@@ -22,6 +22,7 @@ Manage your passwords effortlessly with a simple and secure command-line tool de
 - 🔍 Search and view saved passwords with rich UI
 - 🗑️ Delete credentials you no longer need
 - 🔧 Generate strong passwords instantly
+- 🧠 Analyze password strength with real-time feedback
 - 🎮 Easy to use menu navigation with arrow keys
 
 ---
@@ -73,6 +74,7 @@ You'll see a menu like this:
 ? What would you like to do? (Use arrow keys)
 » 🔓 View saved passwords
   ➕ Add a new password
+  🔍 Check your password
   🔧 Generate a password
   ❌ Exit
 ```
