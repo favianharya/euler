@@ -1,7 +1,6 @@
 import yaml
 import os
 import sys
-import platform
 from cryptography.fernet import Fernet
 import questionary
 

@@ -1,7 +1,6 @@
 import random
 import string
 import argparse
-import getpass
 import sys
 import yaml
 import os
