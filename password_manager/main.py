@@ -1,7 +1,12 @@
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
-from utils.file import read_text  # Or replace with open() if needed
+
+from utils.file import read_text  
+from utils.password_generator import PasswordEnhancer
+from utils.password_view import PasswordViewer
+from utils.view import ScreenUtils
+
 import questionary
 
 console = Console()
@@ -41,20 +46,30 @@ def menu():
 
 
 def main():
-    description()
-    choice = menu()
+    
+    while True:
+        ScreenUtils.clear()
+        description()
+        choice = menu()
+        
+        if choice == "🔓 View saved passwords":
+            print("You selected: View saved passwords")
+            viewer = PasswordViewer()
+            viewer.view()
+            input("\nPress Enter to return to menu...")
 
-    if choice == "🔓 View saved passwords":
-        print("You selected: View saved passwords")
-        # Add logic here
-    elif choice == "➕ Add a new password":
-        print("You selected: Add a new password")
-        # Add logic here
-    elif choice == "🔧 Generate a password":
-        print("You selected: Generate a password")
-        # Add logic here
-    elif choice == "❌ Exit":
-        print("Goodbye!")
+        elif choice == "➕ Add a new password":
+            print("You selected: Add a new password")
+            # Add logic here
+
+        elif choice == "🔧 Generate a password":
+            print("You selected: Generate a password")
+            PasswordEnhancer().run()
+            input("\nPress [Enter] to return to the menu...")  # Optional pause
+
+        elif choice == "❌ Exit":
+            print("Goodbye!")
+            break 
 
 if __name__ == "__main__":
     main()
