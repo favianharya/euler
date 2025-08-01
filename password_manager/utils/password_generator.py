@@ -7,6 +7,19 @@ import yaml
 import os
 from cryptography.fernet import Fernet
 
+from utils.view import ScreenUtils
+
+from rich.console import Console
+from rich.panel import Panel
+
+from prompt_toolkit import prompt
+from prompt_toolkit.key_binding import KeyBindings
+
+from prompt_toolkit import PromptSession
+from prompt_toolkit.application import get_app_or_none
+
+console = Console()
+
 class PasswordEnhancer:
     def __init__(self):
         parser = argparse.ArgumentParser(description="Enhance your password with random characters.")
@@ -31,9 +44,23 @@ class PasswordEnhancer:
         return Fernet(key)
 
     def get_base_password(self):
+        bindings = KeyBindings()
+        session = PromptSession()
+
+        @bindings.add("escape")
+        def _(event):
+            event.app.exit(result=None)  # Exit prompt with result = None
+
         try:
-            return getpass.getpass("Enter your base password: ")
-        except KeyboardInterrupt:
+            password = session.prompt(
+                "Enter your base password: ",
+                is_password=True,
+                key_bindings=bindings,
+            )
+            if password is None:
+                return None
+            return password
+        except (KeyboardInterrupt, EOFError):
             print("\nCancelled.")
             sys.exit(1)
 
@@ -49,6 +76,12 @@ class PasswordEnhancer:
             combined = ''.join(combined)
 
         return combined
+
+    @staticmethod
+    def show_enhanced_password(enhanced):
+        content = f"🔧 [bold green]Enhanced password:[/bold green] [bold yellow]{enhanced}[/bold yellow]"
+        panel = Panel(content, border_style="blue", expand=False)
+        console.print(panel)
 
     def save_to_yaml(self, name, password):
         encrypted_password = self.fernet.encrypt(password.encode()).decode()
@@ -70,9 +103,16 @@ class PasswordEnhancer:
 
     def run(self):
         while True:
+            ScreenUtils.clear()
+
             base_password = self.get_base_password()
+            if base_password is None:
+                return  # ← exit run() completely
+
+            ScreenUtils.clear()
+
             enhanced = self.generate(base_password)
-            print("\nEnhanced password:", enhanced)
+            PasswordEnhancer.show_enhanced_password(enhanced)
 
             choice = input("\nAre you satisfied with this password? (y/n): ").strip().lower()
             if choice == "y":
@@ -80,3 +120,4 @@ class PasswordEnhancer:
                 self.save_to_yaml(label, enhanced)
                 break
             print("\nLet's try again...\n")
+

@@ -8,7 +8,14 @@ import questionary
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings
 
+from rich.console import Console
+from rich.panel import Panel
+
+console = Console()
+
 from utils.view import ScreenUtils
+
+console = Console()
 
 class PasswordViewer:
     def __init__(self, yaml_file="passwords.yaml", key_file="secret.key"):
@@ -54,6 +61,11 @@ class PasswordViewer:
 
         return None if cancel_flag["cancelled"] else result
 
+    @staticmethod
+    def show_password(selected, decrypted):
+        text = f"🔐 Password for '[bold cyan]{selected}[/bold cyan]': [bold yellow]{decrypted}[/bold yellow]"
+        console.print(Panel(text, border_style="green", expand=False))
+
     def view(self):
         while True:
             ScreenUtils.clear()
@@ -91,7 +103,7 @@ class PasswordViewer:
                 ScreenUtils.clear()
                 try:
                     decrypted = self.fernet.decrypt(encrypted_data[selected].encode()).decode()
-                    print(f"\n🔐 Password for '{selected}': {decrypted}")
+                    PasswordViewer.show_password(selected, decrypted)
                 except Exception:
                     print(f"\n❌ Failed to decrypt password for '{selected}'")
 
