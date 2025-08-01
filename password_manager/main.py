@@ -3,8 +3,7 @@ from rich.panel import Panel
 from rich.text import Text
 
 from utils.file import read_text  
-from utils.password_generator import PasswordEnhancer
-from utils.password_view import PasswordViewer
+from utils.password import PasswordEnhancer, PasswordAdder, PasswordViewer
 from utils.view import ScreenUtils
 
 import questionary
@@ -53,17 +52,16 @@ def main():
         choice = menu()
         
         if choice == "🔓 View saved passwords":
-            print("You selected: View saved passwords")
             viewer = PasswordViewer()
             viewer.view()
-            input("\nPress Enter to return to menu...")
+            input("\nPress [Enter] to return to the menu...") 
 
         elif choice == "➕ Add a new password":
-            print("You selected: Add a new password")
-            # Add logic here
+            adder = PasswordAdder()
+            adder.add()
+            input("\nPress [Enter] to return to the menu...") 
 
         elif choice == "🔧 Generate a password":
-            print("You selected: Generate a password")
             PasswordEnhancer().run()
             input("\nPress [Enter] to return to the menu...")  # Optional pause
 
