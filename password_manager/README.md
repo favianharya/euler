@@ -29,12 +29,13 @@ Manage your passwords effortlessly with a simple and secure command-line tool de
 
 ## 📦 Requirements
 
-- Python 3.11+
+- `Python 3.11+`
 - `cryptography`
 - `questionary`
 - `prompt_toolkit`
 - `PyYAML`
 - `rich`
+- `zxcvbn`
 
 ---
 
