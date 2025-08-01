@@ -17,4 +17,5 @@ dist/
 .env
 
 # Ignore only this password file
-password.yaml
+passwords.yaml
+*.key

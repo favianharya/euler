@@ -65,6 +65,13 @@ class PasswordViewer:
     def show_password(selected, decrypted):
         text = f"🔐 Password for '[bold cyan]{selected}[/bold cyan]': [bold yellow]{decrypted}[/bold yellow]"
         console.print(Panel(text, border_style="green", expand=False))
+    
+    @staticmethod
+    def show_deletion_message(name):
+        text = f"✅ Password '[bold cyan]{name}[/bold cyan]' deleted."
+        panel = Panel(text, border_style="red", title="Deleted", title_align="left", expand=False)
+        console.print(panel)
+
 
     def view(self):
         while True:
@@ -106,5 +113,22 @@ class PasswordViewer:
                     PasswordViewer.show_password(selected, decrypted)
                 except Exception:
                     print(f"\n❌ Failed to decrypt password for '{selected}'")
+                    input("\nPress [Enter] to return to the password list...")
+                    continue
 
-                input("\nPress [Enter] to return to the password list...")
+                # Ask whether to delete the password
+                action = questionary.select(
+                    "What would you like to do?",
+                    choices=["🔙 Return to list", "🗑️ Delete this password"]
+                ).ask()
+
+                if action == "🗑️ Delete this password":
+                    ScreenUtils.clear()
+                    confirm = questionary.confirm(f"Are you sure you want to delete '{selected}'?").ask()
+                    if confirm:
+                        del encrypted_data[selected]
+                        with open(self.yaml_file, "w") as f:
+                            yaml.safe_dump(encrypted_data, f)
+                        PasswordViewer.show_deletion_message(selected)
+                        input("Press [Enter] to continue...")
+                        break  # Go back to search view with updated list
