@@ -246,11 +246,38 @@ class PasswordViewer:
                         PasswordViewer.show_deletion_message(selected)
                         input("Press [Enter] to continue...")
                         break
-
+    
     @staticmethod
     def show_password(selected, decrypted):
-        text = f"🔐 Password for '[bold cyan]{selected}[/bold cyan]': [bold yellow]{decrypted}[/bold yellow]"
-        console.print(Panel(text, border_style="green", expand=False))
+        analysis = zxcvbn(decrypted)
+
+        score_labels = {
+            0: "🟥 Very Weak",
+            1: "🟧 Weak",
+            2: "🟨 Fair",
+            3: "🟩 Strong",
+            4: "🟦 Very Strong"
+        }
+
+        score = analysis["score"]
+        crack_time = analysis["crack_times_display"]["offline_fast_hashing_1e10_per_second"]
+        feedback = analysis["feedback"]
+
+        text = Text()
+        text += Text.from_markup(f"🔐 Password for '[bold cyan]{selected}[/bold cyan]':\n")
+        text += Text.from_markup(f"[bold yellow]{decrypted}[/bold yellow]\n\n")
+        text += Text.from_markup(f"🔎 Strength: {score_labels[score]}\n")
+        text += Text.from_markup(f"⏳ Estimated crack time: [bold]{crack_time}[/bold]\n")
+
+        if feedback["warning"]:
+            text += Text.from_markup(f"⚠️  Warning: [red]{feedback['warning']}[/red]\n")
+
+        if feedback["suggestions"]:
+            text += Text.from_markup("💡 Suggestions:\n", style="blue")
+            for s in feedback["suggestions"]:
+                text += Text(f"   - {s}\n")
+
+        console.print(Panel(text, border_style="green", title="Password Details", expand=False))
 
     @staticmethod
     def show_deletion_message(name):
