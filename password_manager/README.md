@@ -62,7 +62,8 @@ uv sync
 Run the application:
 
 ```bash
-python main.py
+cd password_manager
+uv run main.py
 ```
 
 You'll see a menu like this:
