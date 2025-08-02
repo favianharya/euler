@@ -7,6 +7,7 @@ import os
 from cryptography.fernet import Fernet
 
 from utils.view import ScreenUtils
+from utils.file import Storage
 
 from rich.console import Console
 from rich.panel import Panel
@@ -33,19 +34,7 @@ class PasswordEnhancer:
 
         self.add_length = args.length
         self.shuffle = not args.no_shuffle
-        self.output_file = "passwords.yaml"
-        self.key_file = "secret.key"
-        self.fernet = self._load_or_create_key()
-
-    def _load_or_create_key(self):
-        if not os.path.exists(self.key_file):
-            key = Fernet.generate_key()
-            with open(self.key_file, "wb") as f:
-                f.write(key)
-        else:
-            with open(self.key_file, "rb") as f:
-                key = f.read()
-        return Fernet(key)
+        self.storage = Storage()
 
     def get_base_password(self):
         bindings = KeyBindings()
@@ -53,7 +42,7 @@ class PasswordEnhancer:
 
         @bindings.add("escape")
         def _(event):
-            event.app.exit(result=None)  # Exit prompt with result = None
+            event.app.exit(result=None)
 
         try:
             password = session.prompt(
@@ -88,22 +77,12 @@ class PasswordEnhancer:
         console.print(panel)
 
     def save_to_yaml(self, name, password):
-        encrypted_password = self.fernet.encrypt(password.encode()).decode()
-        data = {}
-
-        if os.path.exists(self.output_file):
-            with open(self.output_file, 'r') as f:
-                try:
-                    data = yaml.safe_load(f) or {}
-                except yaml.YAMLError:
-                    print("Error reading YAML file. Overwriting.")
-
+        encrypted_password = self.storage.encrypt(password)
+        data = self.storage.load_passwords()
         data[name] = encrypted_password
+        self.storage.save_passwords(data)
 
-        with open(self.output_file, 'w') as f:
-            yaml.safe_dump(data, f)
-
-        print(f"\n🔐 Encrypted password saved under name: {name} in `{self.output_file}`")
+        print(f"\n🔐 Encrypted password saved under name: {name} in `{self.storage.yaml_file}`")
 
     def run(self):
         while True:
@@ -111,7 +90,7 @@ class PasswordEnhancer:
 
             base_password = self.get_base_password()
             if base_password is None:
-                return  # ← exit run() completely
+                return
 
             ScreenUtils.clear()
 
@@ -126,41 +105,8 @@ class PasswordEnhancer:
             print("\nLet's try again...\n")
 
 class PasswordAdder:
-    def __init__(self, yaml_file="passwords.yaml", key_file="secret.key"):
-        self.yaml_file = yaml_file
-        self.key_file = key_file
-        self.fernet = self._load_key()
-
-    def _load_key(self):
-        if not os.path.exists(self.key_file):
-            print("❌ Error: Encryption key not found.")
-            sys.exit(1)
-
-        with open(self.key_file, "rb") as f:
-            return Fernet(f.read())
-
-    def _load_encrypted_passwords(self):
-        if os.path.exists(self.yaml_file):
-            with open(self.yaml_file, "r") as f:
-                try:
-                    return yaml.safe_load(f) or {}
-                except yaml.YAMLError:
-                    print("❌ Error reading password file.")
-                    sys.exit(1)
-        return {}
-
-    def _save_passwords(self, data):
-        with open(self.yaml_file, "w") as f:
-            yaml.safe_dump(data, f)
-
-    @staticmethod
-    def show_added_message(name, password):
-        text = f"""✅ Password for '[bold cyan]{name}[/bold cyan]' added successfully.
-
-[bold green]🔐 Stored Password:[/bold green] [bold yellow]{password}[/bold yellow]
-"""
-        panel = Panel(text, border_style="green", title="Saved", title_align="left", expand=False)
-        console.print(panel)
+    def __init__(self):
+        self.storage = Storage()
 
     def _get_name_input(self):
         bindings = KeyBindings()
@@ -179,11 +125,10 @@ class PasswordAdder:
 
             if cancel_flag["cancelled"]:
                 return None
-            
+
             if not result.strip():
                 print("❌ Name input cancelled or empty.")
                 continue
-            
 
             return result.strip()
 
@@ -200,48 +145,33 @@ class PasswordAdder:
             print("❌ Password cannot be empty.")
             return
 
-        encrypted_data = self._load_encrypted_passwords()
+        encrypted_data = self.storage.load_passwords()
 
         if name in encrypted_data:
             overwrite = questionary.confirm(f"'{name}' already exists. Overwrite?").ask()
             if not overwrite:
                 return
 
-        encrypted_password = self.fernet.encrypt(password.encode()).decode()
+        encrypted_password = self.storage.encrypt(password)
         encrypted_data[name] = encrypted_password
 
-        self._save_passwords(encrypted_data)
+        self.storage.save_passwords(encrypted_data)
         ScreenUtils.clear()
         PasswordAdder.show_added_message(name, password)
         input("\nPress [Enter] to return to the menu...")
 
+    @staticmethod
+    def show_added_message(name, password):
+        text = f"""✅ Password for '[bold cyan]{name}[/bold cyan]' added successfully.
+
+[bold green]🔐 Stored Password:[/bold green] [bold yellow]{password}[/bold yellow]
+"""
+        panel = Panel(text, border_style="green", title="Saved", title_align="left", expand=False)
+        console.print(panel)
+
 class PasswordViewer:
-    def __init__(self, yaml_file="passwords.yaml", key_file="secret.key"):
-        self.yaml_file = yaml_file
-        self.key_file = key_file
-        self.fernet = self._load_key()
-
-    def _load_key(self):
-        if not os.path.exists(self.key_file):
-            print("❌ Error: Encryption key not found.")
-            sys.exit(1)
-
-        with open(self.key_file, "rb") as f:
-            return Fernet(f.read())
-
-    def _load_encrypted_passwords(self):
-        if not os.path.exists(self.yaml_file):
-            print("❌ Error: No password file found.")
-            sys.exit(1)
-
-        with open(self.yaml_file, "r") as f:
-            try:
-                data = yaml.safe_load(f) or {}
-            except yaml.YAMLError:
-                print("❌ Error reading password file.")
-                sys.exit(1)
-
-        return data
+    def __init__(self):
+        self.storage = Storage()
 
     def _get_search_input(self):
         bindings = KeyBindings()
@@ -259,22 +189,10 @@ class PasswordViewer:
 
         return None if cancel_flag["cancelled"] else result
 
-    @staticmethod
-    def show_password(selected, decrypted):
-        text = f"🔐 Password for '[bold cyan]{selected}[/bold cyan]': [bold yellow]{decrypted}[/bold yellow]"
-        console.print(Panel(text, border_style="green", expand=False))
-    
-    @staticmethod
-    def show_deletion_message(name):
-        text = f"✅ Password '[bold cyan]{name}[/bold cyan]' deleted."
-        panel = Panel(text, border_style="red", title="Deleted", title_align="left", expand=False)
-        console.print(panel)
-
-
     def view(self):
         while True:
             ScreenUtils.clear()
-            encrypted_data = self._load_encrypted_passwords()
+            encrypted_data = self.storage.load_passwords()
 
             if not encrypted_data:
                 print("🔎 No saved passwords found.")
@@ -287,7 +205,7 @@ class PasswordViewer:
                 ScreenUtils.clear()
                 search = self._get_search_input()
                 if search is None:
-                    return  # Esc pressed → exit to menu
+                    return
                 ScreenUtils.clear()
 
                 filtered = [name for name in all_passwords if search.lower() in name.lower()] if search else all_passwords
@@ -303,18 +221,17 @@ class PasswordViewer:
                 selected = questionary.select("Select a password to view:", choices=choices).ask()
 
                 if selected == "🔙 Back to search" or selected is None:
-                    continue  # back to search prompt
+                    continue
 
                 ScreenUtils.clear()
                 try:
-                    decrypted = self.fernet.decrypt(encrypted_data[selected].encode()).decode()
+                    decrypted = self.storage.decrypt(encrypted_data[selected])
                     PasswordViewer.show_password(selected, decrypted)
                 except Exception:
                     print(f"\n❌ Failed to decrypt password for '{selected}'")
                     input("\nPress [Enter] to return to the password list...")
                     continue
 
-                # Ask whether to delete the password
                 action = questionary.select(
                     "What would you like to do?",
                     choices=["🔙 Return to list", "🗑️ Delete this password"]
@@ -325,11 +242,21 @@ class PasswordViewer:
                     confirm = questionary.confirm(f"Are you sure you want to delete '{selected}'?").ask()
                     if confirm:
                         del encrypted_data[selected]
-                        with open(self.yaml_file, "w") as f:
-                            yaml.safe_dump(encrypted_data, f)
+                        self.storage.save_passwords(encrypted_data)
                         PasswordViewer.show_deletion_message(selected)
                         input("Press [Enter] to continue...")
-                        break  # Go back to search view with updated list
+                        break
+
+    @staticmethod
+    def show_password(selected, decrypted):
+        text = f"🔐 Password for '[bold cyan]{selected}[/bold cyan]': [bold yellow]{decrypted}[/bold yellow]"
+        console.print(Panel(text, border_style="green", expand=False))
+
+    @staticmethod
+    def show_deletion_message(name):
+        text = f"✅ Password '[bold cyan]{name}[/bold cyan]' deleted."
+        panel = Panel(text, border_style="red", title="Deleted", title_align="left", expand=False)
+        console.print(panel)
 
 class PasswordPowerChecker:
     def __init__(self):

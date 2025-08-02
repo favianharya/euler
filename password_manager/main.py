@@ -2,7 +2,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from utils.file import read_text  
+from utils.file import Storage
 from utils.password import PasswordEnhancer, PasswordAdder, PasswordViewer, PasswordPowerChecker
 from utils.view import ScreenUtils
 
@@ -12,7 +12,7 @@ console = Console()
 
 def description():
     
-    title = Text.from_markup(read_text("resource/logo.txt"), style="bright_blue")
+    title = Text.from_markup(Storage.read_text("resource/logo.txt"), style="bright_blue")
     console.print(title)
 
     # Description
@@ -57,21 +57,17 @@ def main():
         if choice == "🔓 View saved passwords":
             viewer = PasswordViewer()
             viewer.view()
-            input("\nPress [Enter] to return to the menu...") 
 
         elif choice == "➕ Add a new password":
             adder = PasswordAdder()
             adder.add()
-            input("\nPress [Enter] to return to the menu...") 
         
         elif choice == "🔍 Check your password":
             checker = PasswordPowerChecker()
             checker.run()
-            input("\nPress [Enter] to return to the menu...") 
 
         elif choice == "🔧 Generate a password":
             PasswordEnhancer().run()
-            input("\nPress [Enter] to return to the menu...")  # Optional pause
 
         elif choice == "❌ Exit":
             print("Goodbye!")
