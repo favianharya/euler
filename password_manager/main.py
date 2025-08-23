@@ -21,7 +21,7 @@ def description():
     # Features
     console.print("[green]🔐[/green] Store all your passwords securely")
     console.print("[green]🔧[/green] Generate strong, unique passwords instantly")
-    console.print("[green]➕[/green] Add new credentials with ease\n")
+    console.print("[green]➕[/green] Add new credentials with ease")
     console.print("[cyan]🔍[/cyan] Analyze your password strength with instant feedback\n")
 
 

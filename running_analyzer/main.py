@@ -14,10 +14,8 @@ def main():
 
     # prepare the model input
     prompt = """
-    You are a running coach. Based on the runner's input (avg heart rate, pace, cadence, and weekly mileage), create a 7-day running plan.
-For each day, include: run type, distance or time, pace range or heart rate zone, and purpose.
-Keep the plan balanced for a moderately fit runner aiming to improve endurance and efficiency.
-
+    
+Analyze my running specs:
 Input: "Avg HR: 152 bpm, Pace: 5:10 min/km, Cadence: 168 spm, Weekly mileage: 35 km.
 """
     messages = [
