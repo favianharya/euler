@@ -17,5 +17,6 @@ dist/
 .env
 
 # Ignore only this password file
+tokopaedi_scrap_results/
 passwords.yaml
 *.key

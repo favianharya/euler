@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 import pandas as pd
+import re
 import os
 
 class TokopediaScraper:
@@ -51,9 +52,12 @@ class TokopediaScraper:
         folder_name = "tokopaedi_scrap_results"
         os.makedirs(folder_name, exist_ok=True)
 
+        pattern = r"https?://(?:www\.)?tokopedia\.com/([^/]+)(?:/|$)"
+        match = re.search(pattern, self.url)
+
         # Build filename with path inside folder
         end_page = self.start_page + self.pages - 1
-        filename = os.path.join(folder_name, f"tokopedia_{self.start_page}-{end_page}.csv")
+        filename = os.path.join(folder_name, f"tokopedia_{match.group(1)}_{self.start_page}-{end_page}.csv")
 
         # Save DataFrame to CSV
         df = pd.DataFrame(self.data, columns=["Produk", "Ulasan", "Bintang"])
