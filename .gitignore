@@ -20,3 +20,4 @@ dist/
 tokopaedi_scrap_results/
 passwords.yaml
 *.key
+vector_db/
