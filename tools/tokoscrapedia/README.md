@@ -58,8 +58,9 @@ uv sync
 Run the application:
 
 ```bash
-cd password_manager
-uv run app.py
+cd tokoscrapedia
+make install-tokoscrapedia
+tokoscrapedia
 ```
 
 ---
