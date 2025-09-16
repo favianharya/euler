@@ -2,6 +2,7 @@ import os
 import sys
 import yaml
 from cryptography.fernet import Fernet
+from importlib.resources import files
 
 class Storage:
     def __init__(self, yaml_file="passwords.yaml", key_file="secret.key"):
@@ -45,9 +46,9 @@ class Storage:
 
     @staticmethod
     def read_text(file_path: str) -> str:
-        """Reads and returns plain text content from a file."""
-        with open(file_path, "r") as file:
-            return file.read()
+        resource_path = files("safepass").joinpath(file_path)
+        with open(resource_path, "r", encoding="utf-8") as f:
+            return f.read()
 
     @staticmethod
     def read_yaml(file_path: str) -> dict:

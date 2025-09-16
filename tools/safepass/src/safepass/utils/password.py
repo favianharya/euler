@@ -6,8 +6,8 @@ import yaml
 import os
 from cryptography.fernet import Fernet
 
-from utils.view import ScreenUtils
-from utils.file import Storage
+from .view import ScreenUtils
+from .file import Storage
 
 from rich.console import Console
 from rich.panel import Panel

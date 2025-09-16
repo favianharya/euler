@@ -2,9 +2,9 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from utils.file import Storage
-from utils.password import PasswordEnhancer, PasswordAdder, PasswordViewer, PasswordPowerChecker
-from utils.view import ScreenUtils
+from .utils.file import Storage
+from .utils.password import PasswordEnhancer, PasswordAdder, PasswordViewer, PasswordPowerChecker
+from .utils.view import ScreenUtils
 
 import questionary
 

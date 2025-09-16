@@ -62,8 +62,9 @@ uv sync
 Run the application:
 
 ```bash
-cd password_manager
-uv run main.py
+cd safepass
+make install-safepass
+safepass
 ```
 
 You'll see a menu like this:

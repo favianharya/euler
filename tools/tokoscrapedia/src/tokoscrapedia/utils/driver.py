@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from rich.console import Console
 
-from utils.user_agents import UserAgents
+from .user_agents import UserAgents
 
 console = Console()
 

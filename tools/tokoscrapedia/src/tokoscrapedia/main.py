@@ -1,5 +1,5 @@
-from utils.scraper import TokopediaScraper
-from utils.file import read_text, clear
+from .utils.scraper import TokopediaScraper
+from .utils.file import read_text, clear
 
 from rich.console import Console
 from rich.panel import Panel

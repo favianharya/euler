@@ -1,5 +1,5 @@
-from utils.driver import TokopediaDriver
-from utils.parser import TokopediaParser
+from .driver import TokopediaDriver
+from .parser import TokopediaParser
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
