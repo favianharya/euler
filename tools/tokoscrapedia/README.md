@@ -10,7 +10,7 @@
 
 ```
 
-# 🦉 Tokopaedi Scraper
+# 🦉 Tokoscrapedia
 
 Easily collect and analyze customer reviews from Tokopedia with a fast and reliable scraping tool.
 
