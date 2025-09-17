@@ -85,6 +85,9 @@ class VectorStore:
         self.model_name = model_name
     
     def embed(self):
+        """
+        Initialize and return a HuggingFaceEmbeddings object.
+        """
         logger.info(f"🧠 Initializing embeddings with model: {self.model_name}")
         model_kwargs = {'device':'cpu'}
         encode_kwargs = {'normalize_embeddings': False}
@@ -95,6 +98,9 @@ class VectorStore:
         )
     
     def stored_to_vector(self, docs):
+        """
+        Convert a list of documents into a FAISS vector store.
+        """
         logger.info("⚡ Converting documents to vector store using FAISS")
         embedding = self.embed()
         return FAISS.from_documents(docs, embedding)
@@ -104,14 +110,19 @@ class VectorStore:
         vector_db, 
         vector_name: str
     ):
+        """
+        Save the FAISS vector store to local disk.
+        """
         logger.info(f"💾 Saving vector store locally as: vector_db/{vector_name}")
         rag_path = f"vector_db/{vector_name}"
         vector_db.save_local(rag_path)
 
-    def load(
-        self, 
-        vector_name: str 
-    ):  
+    def load(self, 
+        vector_name: str
+    ):
+        """
+        Load a previously saved FAISS vector store from local disk.
+        """
         logger.info(f"📂 Loading vector store from: vector_db/{vector_name}")
         rag_path = f"vector_db/{vector_name}"
         embedding = self.embed()
