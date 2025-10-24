@@ -1,76 +1,156 @@
 # ===========================================
-# ROUTING MAP CONFIGURATION
+# ROUTING MAP CONFIGURATION (OPEN MODELS ONLY)
 # ===========================================
 
 # --- SUMMARIZATION ---
 summarization:
-  general:
-    low_short: facebook/bart-large-cnn
-    medium_short: sshleifer/distilbart-cnn-12-6
-    high_short: google/pegasus-xsum
-    high_long: google/pegasus-xsum
-
-  financial:
-    medium_short: allenai/led-base-16384-finetuned-summarization
-    high_short: allenai/led-base-16384-finetuned-summarization
-    high_long: allenai/led-base-16384-finetuned-summarization
-
-  art:
-    medium_short: facebook/bart-large-cnn
-    high_short: google/pegasus-large
-    high_long: google/pegasus-large
-
-  news:
-    medium_short: facebook/bart-large-cnn
-    high_short: google/pegasus-large
-    high_long: google/pegasus-large
+  general: &summarization_general
+    low_short: sshleifer/distilbart-cnn-6-6
+    low_medium: facebook/bart-base
+    low_long: facebook/bart-large-cnn
+    medium_short: google/pegasus-xsum
+    medium_medium: google/pegasus-cnn_dailymail
+    medium_long: allenai/led-base-16384-finetuned-summarization
+    high_short: google/flan-t5-xl
+    high_medium: google/flan-t5-xxl
+    high_long: google/flan-ul2
+  financial: *summarization_general
+  art: *summarization_general
+  news: *summarization_general
+  legal: *summarization_general
+  tech: *summarization_general
+  health: *summarization_general
 
 # --- TRANSLATION ---
 translation:
-  general:
+  general: &translation_general
     low_short: Helsinki-NLP/opus-mt-en-id
-    medium_short: Helsinki-NLP/opus-mt-en-id
-    high_short: facebook/nllb-200-1.3B
-    high_long: facebook/nllb-200-1.3B
-
-  legal:
-    medium_short: facebook/nllb-200-3.3B
+    low_medium: Helsinki-NLP/opus-mt-en-fr
+    low_long: facebook/nllb-200-distilled-600M
+    medium_short: facebook/nllb-200-1.3B
+    medium_medium: facebook/nllb-200-1.3B
+    medium_long: facebook/nllb-200-3.3B
     high_short: facebook/nllb-200-3.3B
+    high_medium: facebook/nllb-200-3.3B
     high_long: facebook/nllb-200-3.3B
+  financial: *translation_general
+  art: *translation_general
+  news: *translation_general
+  legal: *translation_general
+  tech: *translation_general
+  health: *translation_general
 
-# --- QA ---
-qa:
-  general:
-    medium_short: distilbert-base-cased-distilled-squad
-    high_short: deepset/roberta-large-squad2
-    high_long: deepset/roberta-large-squad2
-
+# --- TEXT CLASSIFICATION ---
+text-classification:
+  general: &text_classification_general
+    low_short: distilbert-base-uncased
+    low_medium: roberta-base
+    low_long: roberta-large
+    medium_short: MoritzLaurer/deberta-v3-base-mnli
+    medium_medium: MoritzLaurer/deberta-v3-base-mnli
+    medium_long: MoritzLaurer/deberta-v3-base-mnli
+    high_short: MoritzLaurer/deberta-v3-large-mnli
+    high_medium: MoritzLaurer/deberta-v3-large-mnli
+    high_long: MoritzLaurer/deberta-v3-large-mnli
   financial:
-    medium_short: yiyanghkust/finbert-tone
-    high_short: yiyanghkust/finbert-tone
-    high_long: yiyanghkust/finbert-tone
+    low_short: ProsusAI/finbert
+    low_medium: ProsusAI/finbert
+    low_long: ProsusAI/finbert
+    medium_short: MoritzLaurer/deberta-v3-base-mnli
+    medium_medium: MoritzLaurer/deberta-v3-base-mnli
+    medium_long: MoritzLaurer/deberta-v3-base-mnli
+    high_short: MoritzLaurer/deberta-v3-large-mnli
+    high_medium: MoritzLaurer/deberta-v3-large-mnli
+    high_long: MoritzLaurer/deberta-v3-large-mnli
+  art: *text_classification_general
+  news: *text_classification_general
+  legal: *text_classification_general
+  tech: *text_classification_general
+  health: *text_classification_general
 
-  tech:
-    medium_short: distilbert-base-cased-distilled-squad
-    high_short: deepset/roberta-large-squad2
-    high_long: deepset/roberta-large-squad2
-
-# --- GENERATION ---
-generation:
-  general:
-    medium_short: tiiuae/falcon-7b-instruct
-    high_short: meta-llama/Llama-3-8B-Instruct
-    high_long: meta-llama/Llama-3-8B-Instruct
-
-  art:
-    medium_short: mistralai/Mixtral-8x7B-Instruct-v0.1
-    high_short: mistralai/Mixtral-8x7B-Instruct-v0.1
-    high_long: mistralai/Mixtral-8x7B-Instruct-v0.1
-
+# --- QUESTION ANSWERING ---
+question-answering:
+  general: &qa_general
+    low_short: distilbert-base-cased-distilled-squad
+    low_medium: deepset/roberta-base-squad2
+    low_long: deepset/roberta-large-squad2
+    medium_short: deepset/roberta-large-squad2
+    medium_medium: deepset/roberta-large-squad2
+    medium_long: deepset/roberta-large-squad2
+    high_short: google/flan-t5-xl
+    high_medium: google/flan-t5-xxl
+    high_long: google/flan-ul2
   financial:
-    medium_short: tiiuae/falcon-7b-instruct
-    high_short: tiiuae/falcon-7b-instruct
-    high_long: tiiuae/falcon-7b-instruct
+    low_short: ProsusAI/finbert
+    low_medium: ProsusAI/finbert
+    low_long: ProsusAI/finbert
+    medium_short: deepset/roberta-base-squad2
+    medium_medium: deepset/roberta-large-squad2
+    medium_long: deepset/roberta-large-squad2
+    high_short: google/flan-t5-xl
+    high_medium: google/flan-t5-xxl
+    high_long: google/flan-ul2
+  art: *qa_general
+  news: *qa_general
+  legal: *qa_general
+  tech: *qa_general
+  health:
+    low_short: dmis-lab/biobert-base-cased-v1.2-squad
+    low_medium: deepset/roberta-base-squad2
+    low_long: deepset/roberta-large-squad2
+    medium_short: deepset/roberta-large-squad2
+    medium_medium: deepset/roberta-large-squad2
+    medium_long: deepset/roberta-large-squad2
+    high_short: google/flan-t5-xl
+    high_medium: google/flan-t5-xxl
+    high_long: google/flan-ul2
+
+# --- TEXT2TEXT GENERATION ---
+text2text-generation:
+  general: &text2text_general
+    low_short: google/flan-t5-base
+    low_medium: google/flan-t5-large
+    low_long: google/flan-t5-xl
+    medium_short: google/flan-t5-xl
+    medium_medium: google/flan-t5-xxl
+    medium_long: google/flan-ul2
+    high_short: google/flan-t5-xxl
+    high_medium: google/flan-ul2
+    high_long: google/flan-ul2
+  financial: *text2text_general
+  art: *text2text_general
+  news: *text2text_general
+  legal: *text2text_general
+  tech: *text2text_general
+  health: *text2text_general
+
+# --- ZERO-SHOT CLASSIFICATION ---
+zero-shot-classification:
+  general: &zero_shot_general
+    low_short: cross-encoder/nli-distilroberta-base
+    low_medium: facebook/bart-large-mnli
+    low_long: facebook/bart-large-mnli
+    medium_short: MoritzLaurer/deberta-v3-base-mnli
+    medium_medium: MoritzLaurer/deberta-v3-base-mnli
+    medium_long: MoritzLaurer/deberta-v3-base-mnli
+    high_short: MoritzLaurer/deberta-v3-large-mnli
+    high_medium: MoritzLaurer/deberta-v3-large-mnli
+    high_long: MoritzLaurer/deberta-v3-large-mnli
+  financial:
+    low_short: ProsusAI/finbert
+    low_medium: facebook/bart-large-mnli
+    low_long: facebook/bart-large-mnli
+    medium_short: MoritzLaurer/deberta-v3-base-mnli
+    medium_medium: MoritzLaurer/deberta-v3-base-mnli
+    medium_long: MoritzLaurer/deberta-v3-base-mnli
+    high_short: MoritzLaurer/deberta-v3-large-mnli
+    high_medium: MoritzLaurer/deberta-v3-large-mnli
+    high_long: MoritzLaurer/deberta-v3-large-mnli
+  art: *zero_shot_general
+  news: *zero_shot_general
+  legal: *zero_shot_general
+  tech: *zero_shot_general
+  health: *zero_shot_general
 
 # --- DEFAULT FALLBACK ---
 default: facebook/bart-large-mnli

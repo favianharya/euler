@@ -49,19 +49,15 @@ def main():
     CONTEXT_LABELS = LABELS["context_labels"]
 
     model = Model(
-        model_name="MoritzLaurer/deberta-v3-base-mnli",
+        model_name="cross-encoder/nli-distilroberta-base",
     )
 
     prompt = """
-    Below is an instruction that describes a task. Write a response that appropriately completes the request.
-
     ### Instruction:
-    Give three tips for staying healthy.
+    Translate the following phrase into French.
 
-    ### Response:
-    1.Eat a balanced diet and make sure to include plenty of fruits and vegetables.
-    2. Exercise regularly to keep your body active and strong.
-    3. Get enough sleep and maintain a consistent sleep schedule.
+    ### Input:
+    I miss you
     """
 
     intent_result = model.classify_intent(prompt, candidate_labels=INTENT_LABELS)
@@ -73,10 +69,7 @@ def main():
     complexity = estimate_complexity(prompt)
     length_type = estimate_length_type(prompt)
 
-    try:
-        selected_model = ROUTING_MAP[intent][context][f"{complexity}_{length_type}"]
-    except KeyError:
-        selected_model = ROUTING_MAP.get("default", "facebook/bart-large-mnli")
+    selected_model = ROUTING_MAP[intent][context][f"{complexity}_{length_type}"]
 
     print(f"🔎 Intent: {intent}")
     print(f"🌍 Context: {context}")

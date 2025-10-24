@@ -1,10 +1,10 @@
 intent_labels:
   - summarization
   - translation
-  - sentiment_analysis
-  - qa
-  - generation
-  - classification
+  - text-classification
+  - question-answering
+  - text2text-generation
+  - zero-shot-classification
 
 context_labels:
   - general
@@ -13,3 +13,4 @@ context_labels:
   - news
   - legal
   - tech
+  - health
