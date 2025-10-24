@@ -1,0 +1,15 @@
+intent_labels:
+  - summarization
+  - translation
+  - sentiment_analysis
+  - qa
+  - generation
+  - classification
+
+context_labels:
+  - general
+  - financial
+  - art
+  - news
+  - legal
+  - tech

@@ -1,0 +1,76 @@
+# ===========================================
+# ROUTING MAP CONFIGURATION
+# ===========================================
+
+# --- SUMMARIZATION ---
+summarization:
+  general:
+    low_short: facebook/bart-large-cnn
+    medium_short: sshleifer/distilbart-cnn-12-6
+    high_short: google/pegasus-xsum
+    high_long: google/pegasus-xsum
+
+  financial:
+    medium_short: allenai/led-base-16384-finetuned-summarization
+    high_short: allenai/led-base-16384-finetuned-summarization
+    high_long: allenai/led-base-16384-finetuned-summarization
+
+  art:
+    medium_short: facebook/bart-large-cnn
+    high_short: google/pegasus-large
+    high_long: google/pegasus-large
+
+  news:
+    medium_short: facebook/bart-large-cnn
+    high_short: google/pegasus-large
+    high_long: google/pegasus-large
+
+# --- TRANSLATION ---
+translation:
+  general:
+    low_short: Helsinki-NLP/opus-mt-en-id
+    medium_short: Helsinki-NLP/opus-mt-en-id
+    high_short: facebook/nllb-200-1.3B
+    high_long: facebook/nllb-200-1.3B
+
+  legal:
+    medium_short: facebook/nllb-200-3.3B
+    high_short: facebook/nllb-200-3.3B
+    high_long: facebook/nllb-200-3.3B
+
+# --- QA ---
+qa:
+  general:
+    medium_short: distilbert-base-cased-distilled-squad
+    high_short: deepset/roberta-large-squad2
+    high_long: deepset/roberta-large-squad2
+
+  financial:
+    medium_short: yiyanghkust/finbert-tone
+    high_short: yiyanghkust/finbert-tone
+    high_long: yiyanghkust/finbert-tone
+
+  tech:
+    medium_short: distilbert-base-cased-distilled-squad
+    high_short: deepset/roberta-large-squad2
+    high_long: deepset/roberta-large-squad2
+
+# --- GENERATION ---
+generation:
+  general:
+    medium_short: tiiuae/falcon-7b-instruct
+    high_short: meta-llama/Llama-3-8B-Instruct
+    high_long: meta-llama/Llama-3-8B-Instruct
+
+  art:
+    medium_short: mistralai/Mixtral-8x7B-Instruct-v0.1
+    high_short: mistralai/Mixtral-8x7B-Instruct-v0.1
+    high_long: mistralai/Mixtral-8x7B-Instruct-v0.1
+
+  financial:
+    medium_short: tiiuae/falcon-7b-instruct
+    high_short: tiiuae/falcon-7b-instruct
+    high_long: tiiuae/falcon-7b-instruct
+
+# --- DEFAULT FALLBACK ---
+default: facebook/bart-large-mnli
