@@ -1,5 +1,3 @@
-# 🛡️ Password Vault CLI
-
 ```
 
 ░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░ ░▒▓████████▓▒░▒▓███████▓▒░
@@ -11,6 +9,8 @@
 ░▒▓████████▓▒░░▒▓██████▓▒░░▒▓████████▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░
 
 ```
+
+# 🛡️ Password Vault CLI
 
 Manage your passwords effortlessly with a simple and secure command-line tool designed to keep your credentials safe.
 
