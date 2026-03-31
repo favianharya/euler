@@ -1,0 +1,91 @@
+# Product Requirements Document: LocalControl (Orchestrator Edition)
+
+**Version:** 1.1
+
+**Status:** Active
+
+**Owner:** Engineering Lead
+
+## 1. Executive Summary
+
+**LocalControl** is a terminal-based "Command Center" for developers managing multiple projects. It eliminates the need to manually `cd`, `source`, and `activate` environments. By acting as a central launcher, it allows developers to orchestrate execution, monitor ports, and manage environments across their entire filesystem from a single, Gemini-inspired iTerm window.
+
+## 2. Updated Problem Statement
+
+- **Activation Friction:** Manually sourcing `.venv` in every new terminal pane is a repetitive, non-value-add task.
+- **Context Fragmentation:** Managing a frontend, backend, and worker service usually requires 3+ terminal tabs, making it hard to see the "big picture."
+- **Environmental Blindness:** Running scripts in one terminal while the port is blocked by another hidden terminal creates "Port in use" loops.
+
+## 3. Core Features (Orchestration Focus)
+
+### 3.1. Project Discovery & Registry
+
+- **Requirement:** Recursive scanning of a designated `PROJECTS_DIR` to identify repositories.
+- **Logic:** Detect repos based on the presence of `.git`, `package.json`, or `requirements.txt`.
+- **Metadata:** Automatically map the appropriate `.venv` path for each project.
+
+### 3.2. Direct-Execution Engine (The "Launcher")
+
+- **Requirement:** Execute any project file using its specific virtual environment *without* needing to "activate" the shell.
+- **Implementation:** Call the interpreter directly (e.g., `~/repo/.venv/bin/python script.py`).
+- **Action:** Single-key execution (`Enter`) from the TUI file browser.
+
+### 3.3. Multi-Pane Streamer
+
+- **Requirement:** A "Merged Log View" that tails the output of multiple running projects in a single, scrollable TUI pane.
+- **Feature:** Color-coded tags per project (e.g., `[BACKEND]`, `[FRONTEND]`).
+
+### 3.4. Port-to-Project Mapping
+
+- **Requirement:** When a port is detected, the TUI must attempt to match the PID's working directory to a known project in the Registry.
+- **Action:** If a conflict is detected (starting Project A on a port held by Project B), the TUI prompts for an "Auto-Kill & Restart."
+
+---
+
+## 4. User Experience & Design
+
+### 4.1. The "Gemini" Command Bar
+
+- **Location:** Bottom of the screen.
+- **Function:** A global search bar (Cmd+P style) to quickly jump between projects or find a port.
+- **Style:** Minimalist, translucent background with high-fidelity typography.
+
+### 4.2. Workspace View
+
+| **Column** | **Content** | **Action** |
+| --- | --- | --- |
+| **Navigator** | List of all Repos + Git branch status. | `[Space]` to Expand. |
+| **Services** | List of active ports/processes. | `[K]` to Kill. |
+| **Console** | Live output of the selected project. | `[T]` to Open Full Terminal. |
+
+---
+
+## 5. Technical Implementation (Orchestrator Logic)
+
+### 5.1. Execution Wrapper
+
+Instead of `os.system`, the TUI uses a Managed Process class to track life-cycles.
+
+Python
+
+`# The Orchestrator Logic
+def spawn_process(project_path, script):
+    venv_path = find_venv(project_path)
+    env_vars = load_dotenv(project_path)
+    
+    # Run directly using the venv's interpreter
+    return subprocess.Popen(
+        [f"{venv_path}/bin/python", script],
+        cwd=project_path,
+        env={**os.environ, **env_vars},
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT
+    )`
+
+## 6. Next Steps & Milestones
+
+1. **Phase 1:** Build the "Project Scanner" to build the internal repo database.
+2. **Phase 2:** Implement the `psutil` port-to-path mapper.
+3. **Phase 3:** Create the Textual-based Gemini UI with split-pane logging.
+
+---

@@ -1,0 +1,284 @@
+Screen {
+    align: center middle;
+}
+
+#sidebar {
+    width: 55;
+    border: solid grey;
+    padding: 1;
+}
+
+#body {
+    width: 1fr;
+    border: solid grey;
+    padding: 1;
+}
+
+#navigator-panel, #services-panel, #ports-panel, #resources-panel {
+    border: round white;
+    padding: 1;
+    margin: 1;
+}
+
+#navigator-panel {
+    height: 1fr;
+}
+
+#services-panel {
+    height: 10;
+}
+
+#ports-panel {
+    height: 23;
+    overflow-y: auto;
+}
+
+#port-list-container {
+    height: 1fr;
+    width: 100%;
+    overflow-y: auto;
+}
+
+#port-search-input {
+    width: 100%;
+    height: 3;
+    border: tall $primary;
+    background: $surface;
+    color: $foreground;
+    margin: 1 0 0 0;
+    padding: 0 2;
+}
+
+#port-search-input:focus {
+    border: tall $success;
+}
+
+#resources-panel {
+    height: 19;
+    overflow-y: auto;
+}
+
+#ports-panel:focus {
+    border: double $success;
+}
+
+#navigator-panel:focus {
+    border: round $accent;
+}
+
+#navigator-buttons {
+    height: 3;
+    width: 100%;
+    margin: 0 0 1 0;
+}
+
+.nav-button {
+    min-width: 14;
+    max-width: 18;
+    margin: 0 1 0 0;
+}
+
+.remove-button {
+    margin: 0;
+}
+
+#project-list {
+    height: 1fr;
+    width: 100%;
+}
+
+#console-panel {
+    height: 1fr;
+    border: round white;
+    padding: 1;
+    margin: 1;
+}
+
+#console-output {
+    height: 1fr;
+    overflow-y: scroll;
+    border: none;
+}
+
+#console-input-bar {
+    height: 3;
+    width: 100%;
+    background: $panel;
+    border: solid $primary;
+    padding: 0 1;
+}
+
+#console-prompt {
+    color: $success;
+    text-style: bold;
+    width: auto;
+    padding: 0 1 0 0;
+}
+
+#console-input {
+    width: 1fr;
+    border: none;
+    background: transparent;
+}
+
+#console-input-bar {
+    height: 3;
+    width: 100%;
+    background: $panel;
+    border: solid $primary;
+    padding: 0 1;
+}
+
+#console-prompt {
+    color: $success;
+    text-style: bold;
+    width: auto;
+    padding: 0 1 0 0;
+}
+
+#console-input {
+    width: 1fr;
+    border: none;
+    background: transparent;
+}
+
+.project-item {
+    padding: 0 1;
+    height: 1;
+    width: 100%;
+    overflow: hidden;
+}
+
+.project-item.selected {
+    background: $accent;
+    color: $text;
+}
+
+.project-item.terminal-active {
+    color: $success;
+    text-style: bold;
+}
+
+.project-item.no-venv {
+    color: $warning; /* Use a warning color */
+    text-style: italic;
+}
+
+.service-conflict-message {
+    color: $error;
+    text-style: bold;
+}
+
+.service-section-header {
+    color: $accent;
+    text-style: bold;
+    margin: 1 0 0 0;
+}
+
+.active-terminal-line {
+    color: $success;
+    margin: 0 0 0 1;
+}
+
+.kill-button {
+    background: $error;
+    color: white;
+    border: round $error;
+    margin: 0 0 0 1;
+}
+
+.close-terminal-button {
+    background: $warning;
+    color: black;
+    border: round $warning;
+    margin: 0 0 1 1;
+}
+
+.port-section-header {
+    color: $primary;
+    text-style: bold;
+    margin: 0 0 1 0;
+}
+
+.port-line {
+    color: $text;
+    margin: 0 0 0 1;
+    padding: 0 0 0 1;
+}
+
+.port-line-selected {
+    color: $text;
+    background: $accent;
+    text-style: bold;
+    margin: 0 0 0 1;
+    padding: 0 0 0 1;
+}
+
+.port-empty-message {
+    color: $text-muted;
+    text-style: italic;
+    text-align: center;
+}
+
+.kill-port-button {
+    background: $error;
+    color: white;
+    border: round $error;
+    margin: 0 0 1 1;
+}
+
+.kill-port-button:hover {
+    background: $error-darken-1;
+}
+
+.resource-loading {
+    color: $text-muted;
+    text-style: italic;
+    text-align: center;
+}
+
+.resource-line {
+    margin: 0 0 0 0;
+    padding: 0;
+}
+
+.resource-success {
+    color: $success;
+}
+
+.resource-warning {
+    color: $warning;
+}
+
+.resource-error {
+    color: $error;
+    text-style: bold;
+}
+
+.resource-bar {
+    margin: 0 0 0 1;
+    padding: 0;
+}
+
+.resource-spacer {
+    height: 1;
+}
+
+.resource-detail {
+    color: $text-muted;
+    margin: 0 0 0 1;
+}
+
+.console-log-line {
+    /* Styles for individual log lines */
+    min-height: 1; /* Ensure lines take up at least one row */
+    width: 100%;
+}
+
+#command-bar {
+    height: 3;
+    border: double $primary;
+    margin: 1 0;
+    padding: 0 1;
+}
+

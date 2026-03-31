@@ -1,0 +1,6 @@
+textual
+psutil
+python-dotenv
+GitPython
+uv
+toml
